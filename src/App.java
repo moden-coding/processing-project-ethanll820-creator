@@ -3,7 +3,7 @@ import processing.core.*;
 public class App extends PApplet{
      int rectx = 325;
         int recty = 585;
-        int rectspeed = 10;
+        int rectspeed = 30;
     public static void main(String[] args)  {
         PApplet.main("App");
         
