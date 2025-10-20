@@ -6,11 +6,12 @@ public class App extends PApplet{
     }
 
     public void setup(){
+    background(100, 100, 200);
         
     }
 
     public void settings(){
-        
+        size(800, 600);
     }
 
     public void draw(){
