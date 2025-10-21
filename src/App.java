@@ -4,6 +4,7 @@ public class App extends PApplet{
      int rectx = 325;
         int recty = 585;
         int rectspeed = 30;
+        int veloX, veloY = 0;
     public static void main(String[] args)  {
         PApplet.main("App");
         
@@ -21,15 +22,25 @@ public class App extends PApplet{
     public void draw() {
     background(100, 100, 200);
     rect(rectx, recty, 150, 25);
+    move(veloX, veloY);
 }
 
-
+    public void move(int vX, int vY) {
+        rectx += vX;
+    }
     
     public void keyPressed(){
         if (keyCode == RIGHT){
-            rectx += rectspeed;
+            veloX = rectspeed/10;
         } if(keyCode == LEFT){
-            rectx-= rectspeed;
+            veloX = -rectspeed/10;
+        }
+    }
+    public void keyReleased(){
+        if (keyCode == RIGHT){
+            veloX = 0;
+        } if(keyCode == LEFT){
+            veloX = 0;
         }
     }
 }
