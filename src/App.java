@@ -3,14 +3,14 @@ import processing.core.*;
 public class App extends PApplet {
     int rectx = 325;
     int recty = 585;
-    int rectspeed = 60;
+    int rectspeed = 80;
     int veloX, veloY = 0;
     float ballX = 400;
     float ballY = 525;
     float ballSize = 35;
     float ballVeloX = 6;
     float ballVeloY = 6;
-
+    boolean gameOver = false;
 
     public static void main(String[] args) {
         PApplet.main("App");
@@ -46,7 +46,14 @@ public class App extends PApplet {
             ballY = recty - ballSize / 2;
         }
         ellipse(ballX, ballY, ballSize, ballSize);
-        
+
+        ballVeloX *= 1.0005;
+        ballVeloY *= 1.0005;
+        rectspeed *= 1.001;
+
+        if (ballY > height - ballSize / 2) {
+            gameOver = true;
+        }
 
     }
 
