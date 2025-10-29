@@ -11,7 +11,7 @@ public class App extends PApplet {
     float ballVeloX = 6;
     float ballVeloY = 6;
     boolean gameOver = false;
-    int score =0;
+    int score = 0;
 
     public static void main(String[] args) {
         PApplet.main("App");
@@ -34,6 +34,10 @@ public class App extends PApplet {
         ballX += ballVeloX;
         ballY += ballVeloY;
 
+            fill(255);
+            textSize(100);
+            text("Score:", 50, 100);// + score, 50, 100);
+
         if (ballX < ballSize / 2 || ballX > width - ballSize / 2) {
             ballVeloX *= -1;
         }
@@ -54,6 +58,7 @@ public class App extends PApplet {
 
         if (ballY > height - ballSize / 2) {
             gameOver = true;
+
         }
 
     }
@@ -89,7 +94,7 @@ public class App extends PApplet {
         }
     }
 
-    public void score(float by){
+    public void score(float by) {
         if (by < 600) {
             score = score + 1;
         }
