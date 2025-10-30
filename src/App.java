@@ -3,8 +3,8 @@ import processing.core.*;
 public class App extends PApplet {
     int rectx = 325;
     int recty = 585;
-    int rectspeed = 80;
-    int veloX, veloY = 0;
+    float rectspeed = 8;
+    int veloX = 0;
     float ballX = 400;
     float ballY = 525;
     float ballSize = 35;
@@ -15,89 +15,85 @@ public class App extends PApplet {
 
     public static void main(String[] args) {
         PApplet.main("App");
-
-    }
-
-    public void setup() {
-        background(100, 100, 200);
-
     }
 
     public void settings() {
         size(800, 600);
     }
 
+    public void setup() {
+        background(100, 100, 200);
+        textAlign(LEFT, TOP);
+    }
+
     public void draw() {
         background(100, 100, 200);
+
+        // Draw paddle
         rect(rectx, recty, 150, 25);
-        move(veloX, veloY);
+
+        // Move paddle
+        move(veloX, 0);
+
+        // Move ball
         ballX += ballVeloX;
         ballY += ballVeloY;
 
-            fill(255);
-            textSize(100);
-            text("Score:", 50, 100);// + score, 50, 100);
+        // Draw ball
+        ellipse(ballX, ballY, ballSize, ballSize);
 
+        // Show score
+        fill(255);
+        textSize(40);
+        text("Score: " + score, 50, 40);
+
+        // Bounce off left and right walls
         if (ballX < ballSize / 2 || ballX > width - ballSize / 2) {
             ballVeloX *= -1;
         }
-        if (ballY < ballSize / 2 || ballY > height - ballSize / 2) {
+
+        // Bounce off top only (not bottom)
+        if (ballY < ballSize / 2) {
             ballVeloY *= -1;
         }
 
-        if (ballX + ballSize / 2 > rectx && ballX - ballSize / 2 < rectx + 150 &&
-                ballY + ballSize / 2 > recty && ballY - ballSize / 2 < recty + 25) {
+        // Paddle collision
+        if (ballX + ballSize / 2 > rectx &&
+            ballX - ballSize / 2 < rectx + 150 &&
+            ballY + ballSize / 2 > recty &&
+            ballY - ballSize / 2 < recty + 25) {
+
             ballVeloY *= -1;
             ballY = recty - ballSize / 2;
-        }
-        ellipse(ballX, ballY, ballSize, ballSize);
+            score++;
 
-        ballVeloX *= 1.0005;
-        ballVeloY *= 1.0005;
-        rectspeed *= 1.01;
-
-        if (ballY > height - ballSize / 2) {
-            gameOver = true;
-
+            // Speed up ball and paddle slightly
+            ballVeloX *= 1.05;
+            ballVeloY *= 1.05;
+            rectspeed *= 1.05;
         }
 
     }
 
     public void move(int vX, int vY) {
         rectx += vX;
+        // keep paddle within bounds
+        if (rectx < 0) rectx = 0;
+        if (rectx + 150 > width) rectx = width - 150;
     }
 
     public void keyPressed() {
         if (keyCode == RIGHT) {
-            veloX = rectspeed / 10;
+            veloX = (int) rectspeed;
         }
         if (keyCode == LEFT) {
-            veloX = -rectspeed / 10;
+            veloX = (int) -rectspeed;
         }
     }
 
     public void keyReleased() {
-        if (keyCode == RIGHT) {
-            veloX = 0;
-        }
-        if (keyCode == LEFT) {
+        if (keyCode == RIGHT || keyCode == LEFT) {
             veloX = 0;
         }
     }
-
-    public void checkBlockCollision(float bx, float by, float bw, float bh) { // Used ChatGPT for this method to detect
-                                                                              // collision
-        if (ballX + ballSize / 2 > bx && ballX - ballSize / 2 < bx + bw &&
-                ballY + ballSize / 2 > by && ballY - ballSize / 2 < by + bh) {
-            ballVeloY *= -1;
-            ballY = by + bh + ballSize / 2;
-        }
-    }
-
-    public void score(float by) {
-        if (by < 600) {
-            score = score + 1;
-        }
-    }
-
 }
