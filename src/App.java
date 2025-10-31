@@ -57,7 +57,7 @@ public class App extends PApplet {
             ballVeloY *= -1;
         }
 
-        // Paddle collision
+        // Paddle collision ChatGPT
         if (ballX + ballSize / 2 > rectx &&
             ballX - ballSize / 2 < rectx + 150 &&
             ballY + ballSize / 2 > recty &&
