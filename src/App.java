@@ -3,8 +3,8 @@ import processing.core.*;
 public class App extends PApplet {
     int rectx = 325;
     int recty = 585;
-    int rectspeed = 80;
-    int veloX, veloY = 0;
+    float rectspeed = 80;
+    float veloX;
     float ballX = 400;
     float ballY = 525;
     float ballSize = 35;
@@ -30,31 +30,22 @@ public class App extends PApplet {
     public void draw() {
         background(100, 100, 200);
         rect(rectx, recty, 150, 25);
-        move(veloX, veloY);
+        move(veloX);
         ballX += ballVeloX;
         ballY += ballVeloY;
 
-            fill(255);
-            textSize(100);
-            text("Score:", 50, 100);// + score, 50, 100);
+        fill(255);
+        textSize(100);
+        text("Score:", 50, 100);
 
-        if (ballX < ballSize / 2 || ballX > width - ballSize / 2) {
-            ballVeloX *= -1;
-        }
-        if (ballY < ballSize / 2 || ballY > height - ballSize / 2) {
-            ballVeloY *= -1;
-        }
+        Checkcollisions();
 
-        if (ballX + ballSize / 2 > rectx && ballX - ballSize / 2 < rectx + 150 &&
-                ballY + ballSize / 2 > recty && ballY - ballSize / 2 < recty + 25) {
-            ballVeloY *= -1;
-            ballY = recty - ballSize / 2;
-        }
-        ellipse(ballX, ballY, ballSize, ballSize);
+    }
+
+    ellipse(ballX, ballY, ballSize, ballSize);
 
         ballVeloX *= 1.0005;
         ballVeloY *= 1.0005;
-        rectspeed *= 1.01;
 
         if (ballY > height - ballSize / 2) {
             gameOver = true;
@@ -63,7 +54,7 @@ public class App extends PApplet {
 
     }
 
-    public void move(int vX, int vY) {
+    public void move(float vX) {
         rectx += vX;
     }
 
@@ -85,11 +76,22 @@ public class App extends PApplet {
         }
     }
 
-    public void checkBlockCollision(float bx, float by, float bw, float bh) { // Used ChatGPT for this method to detect collision
-        if (ballX + ballSize / 2 > bx && ballX - ballSize / 2 < bx + bw &&
-                ballY + ballSize / 2 > by && ballY - ballSize / 2 < by + bh) {
+    public void Checkcollisions() {
+        float radius = ballSize / 2;
+
+        if (ballX - radius <= 0 || ballX + radius >= width) {
+            ballVeloX *= -1;
+        }
+        if (ballY - radius <= 0) {
             ballVeloY *= -1;
-            ballY = by + bh + ballSize / 2;
+        }
+
+        if (ballX + radius > rectx && ballX - radius < rectx + 150 &&
+                ballY + radius > recty && ballY - radius < recty + 25) {
+            ballVeloY *= -1;
+            ballY = recty - radius;
+            score += 1;
+            rectspeed = 80 + score * 5;
         }
     }
 
