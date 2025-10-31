@@ -20,6 +20,7 @@ public class App extends PApplet {
 
     public void setup() {
         background(100, 100, 200);
+        textSize(40);
 
     }
 
@@ -28,30 +29,40 @@ public class App extends PApplet {
     }
 
     public void draw() {
-        background(100, 100, 200);
-        rect(rectx, recty, 150, 25);
-        move(veloX);
+    background(100, 100, 200);
+
+    
+    rect(rectx, recty, 150, 25);
+    move(veloX);
+
+    if (!gameOver) {
         ballX += ballVeloX;
         ballY += ballVeloY;
 
-        fill(255);
-        textSize(100);
-        text("Score:", 50, 100);
-
-        Checkcollisions();
-
-    }
-
-    ellipse(ballX, ballY, ballSize, ballSize);
-
+    
         ballVeloX *= 1.0005;
         ballVeloY *= 1.0005;
+    }
 
-        if (ballY > height - ballSize / 2) {
-            gameOver = true;
+    Checkcollisions();
+    ellipse(ballX, ballY, ballSize, ballSize);
+    fill(255);
+    text("Score: " + score, 50, 100);
+    if (ballY > height - ballSize / 2 && !gameOver) {
+        gameOver = true;
+        resetGame();
+    }
+}
 
-        }
-
+    public void resetGame() {
+        ballX = 400;
+        ballY = 525;
+        ballVeloX = 6;
+        ballVeloY = 6;
+        rectx = 325;
+        rectspeed = 80;
+        score = 0;
+        gameOver = false;
     }
 
     public void move(float vX) {
@@ -92,12 +103,6 @@ public class App extends PApplet {
             ballY = recty - radius;
             score += 1;
             rectspeed = 80 + score * 5;
-        }
-    }
-
-    public void score(float by) {
-        if (by < 600) {
-            score = score + 1;
         }
     }
 
