@@ -12,6 +12,11 @@ public class App extends PApplet {
     float ballVeloY = 6;
     boolean gameOver = false;
     int score = 0;
+    float blockX = 100;
+    float blockY = 100;
+    float blockWidth = 100;
+    float blockHeight = 25;
+    float blockVeloX = 3;
 
     public static void main(String[] args) {
         PApplet.main("App");
@@ -29,30 +34,36 @@ public class App extends PApplet {
     }
 
     public void draw() {
-    background(100, 100, 200);
+        background(100, 100, 200);
 
-    
-    rect(rectx, recty, 150, 25);
-    move(veloX);
+        rect(rectx, recty, 150, 25);
+        move(veloX);
 
-    if (!gameOver) {
-        ballX += ballVeloX;
-        ballY += ballVeloY;
+        blockX += blockVeloX;
+        if (blockX <= 0 || blockX + blockWidth >= width) {
+            blockVeloX *= -1;}
+            fill(255, 0, 0);
+            rect(blockX, blockY, blockWidth, blockHeight);
 
-    
-        ballVeloX *= 1.0005;
-        ballVeloY *= 1.0005;
+        
+
+        if (!gameOver) {
+            ballX += ballVeloX;
+            ballY += ballVeloY;
+
+            ballVeloX *= 1.0005;
+            ballVeloY *= 1.0005;
+        }
+
+        Checkcollisions();
+        ellipse(ballX, ballY, ballSize, ballSize);
+        fill(255);
+        text("Score: " + score, 50, 100);
+        if (ballY > height - ballSize / 2 && !gameOver) {
+            gameOver = true;
+            resetGame();
+        }
     }
-
-    Checkcollisions();
-    ellipse(ballX, ballY, ballSize, ballSize);
-    fill(255);
-    text("Score: " + score, 50, 100);
-    if (ballY > height - ballSize / 2 && !gameOver) {
-        gameOver = true;
-        resetGame();
-    }
-}
 
     public void resetGame() {
         ballX = 400;
@@ -87,7 +98,7 @@ public class App extends PApplet {
         }
     }
 
-    public void Checkcollisions() {
+    public void Checkcollisions() { //used ChatGPT for this method
         float radius = ballSize / 2;
 
         if (ballX - radius <= 0 || ballX + radius >= width) {
@@ -102,8 +113,15 @@ public class App extends PApplet {
             ballVeloY *= -1;
             ballY = recty - radius;
             score += 1;
-            rectspeed = 80 + score * 5;
-        }
-    }
+            rectspeed = 80 + score * 5;}
 
+        if (ballX + radius > blockX && ballX - radius < blockX + blockWidth &&
+        ballY + radius > blockY && ballY - radius < blockY + blockHeight) {
+        ballVeloY *= -1;
+        ballY = blockY + blockHeight + radius;
+        score += 1;
+        }
+    
+    }
 }
+    
