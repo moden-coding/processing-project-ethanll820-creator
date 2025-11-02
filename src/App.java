@@ -1,6 +1,6 @@
 import processing.core.*;
 
-public class App extends PApplet {
+public class App extends PApplet {//this is final version
     int rectx = 325; // Rect variables are for paddle (Position, speed, velocity)
     int recty = 585;
     float rectspeed = 80;
