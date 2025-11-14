@@ -1,6 +1,6 @@
 import processing.core.*;
 
-public class App extends PApplet {//this is final version
+public class App extends PApplet {// this is final version
     int rectx = 325; // Rect variables are for paddle (Position, speed, velocity)
     int recty = 585;
     float rectspeed = 80;
@@ -24,7 +24,7 @@ public class App extends PApplet {//this is final version
     }
 
     public void setup() {
-        background(100, 100, 200); //sets background color and text size
+        background(100, 100, 200); // sets background color and text size
         textSize(40);
 
     }
@@ -41,15 +41,14 @@ public class App extends PApplet {//this is final version
 
         blockX += blockVeloX; // updates block positions and makes it bounce of the walls
         if (blockX <= 0 || blockX + blockWidth >= width) {
-            blockVeloX *= -1;} // reverses direction
+            blockVeloX *= -1;
+        } // reverses direction
 
-            fill(255, 0, 0);
-            rect(blockX, blockY, blockWidth, blockHeight);
-
-        
+        fill(255, 0, 0);
+        rect(blockX, blockY, blockWidth, blockHeight);
 
         if (!gameOver) { // makes it so block only moves if game isn't over
-            ballX += ballVeloX; 
+            ballX += ballVeloX;
             ballY += ballVeloY;
 
             ballVeloX *= 1.0005; // speeds up ball over time
@@ -58,7 +57,9 @@ public class App extends PApplet {//this is final version
 
         Checkcollisions(); // calls on collisions method
 
-        ellipse(ballX, ballY, ballSize, ballSize); // draws ball and score
+        fill(min(abs(ballVeloX) + abs(ballVeloY) * 30, 255), 50, 255);
+        ellipse(ballX, ballY, ballSize, ballSize);
+
         fill(255);
         text("Score: " + score, 50, 100);
         if (ballY > height - ballSize / 2 && !gameOver) {
@@ -82,7 +83,7 @@ public class App extends PApplet {//this is final version
         rectx += vX;
     }
 
-    public void keyPressed() { 
+    public void keyPressed() {
         if (keyCode == RIGHT) {
             veloX = rectspeed / 10;
         }
@@ -100,35 +101,47 @@ public class App extends PApplet {//this is final version
         }
     }
 
-    public boolean Hitblock(float bx, float by, float bwidth,float bheight){ // checks if ball touches moving block and returns boolean as true if it does
-
-        float radius = ballSize / 2;
-        return(ballX + radius > bx && ballX - radius < bx + bwidth && ballY + radius > by && ballY - radius < by + bheight); //returns true when any part of ball overlaps with block
+    public boolean hit(float bx, float by, float bw, float bh) {
+        float r = ballSize / 2;
+        return (ballX + r > bx && ballX - r < bx + bw &&
+                ballY + r > by && ballY - r < by + bh);
     }
-    //used ChatGPT for this method 
-    public void Checkcollisions() { 
+
+    // collisions method for all rectangles
+    public void Checkcollisions() {
+        float r = ballSize / 2;
+
+        // ---- Paddle ----
+        if (hit(rectx, recty, 150, 25)) {
+            ballVeloY *= -1;
+            ballY = recty - r;
+            score++;
+        }
+
+        // ---- Moving Block ----
+        if (hit(blockX, blockY, blockWidth, blockHeight)) {
+            ballVeloY *= -1;
+            if (ballY < blockY) {
+                // hit TOP
+                ballVeloY = -abs(ballVeloY);
+                ballY = blockY - r;
+            } else {
+                // hit BOTTOM
+                ballVeloY = abs(ballVeloY);
+                ballY = blockY + blockHeight + r;
+            }
+
+            score++;
+        }
+
         float radius = ballSize / 2;
 
-        if (ballX - radius <= 0 || ballX + radius >= width) { //ball hits right and left walls
+        if (ballX - radius <= 0 || ballX + radius >= width) { // ball hits right and left walls
             ballVeloX *= -1;
         }
-        if (ballY - radius <= 0) { //ball hits ceiling
+        if (ballY - radius <= 0) { // ball hits ceiling
             ballVeloY *= -1;
         }
-
-        if (ballX + radius > rectx && ballX - radius < rectx + 150 && ballY + radius > recty && ballY - radius < recty + 25) { // ball hits paddle
-            ballVeloY *= -1;
-            ballY = recty - radius;
-            score += 1;
-            rectspeed = 80 + score * 5;}
-
-         if (Hitblock(blockX, blockY, blockWidth, blockHeight)) { //ball hits block (calls Hitblock method)
-            ballVeloY *= -1;
-            ballY = blockY + blockHeight + radius; // bounce off bottom of block
-            score += 1; //increases score
-        }
-
-    
     }
+
 }
-    
