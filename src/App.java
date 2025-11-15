@@ -111,14 +111,14 @@ public class App extends PApplet {// this is final version
     public void Checkcollisions() {
         float r = ballSize / 2;
 
-        // ---- Paddle ----
+        // Paddle 
         if (hit(rectx, recty, 150, 25)) {
             ballVeloY *= -1;
             ballY = recty - r;
             score++;
         }
 
-        // ---- Moving Block ----
+        // Moving Block 
         if (hit(blockX, blockY, blockWidth, blockHeight)) {
             ballVeloY *= -1;
             if (ballY < blockY) {
